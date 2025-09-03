@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="text-align: center; padding-top: 20px;">
+    <h1>Welcome {{ request.user.username }}!</h1>
+    <p>You are logged in successfully.</p>
+        <a href="{% url 'Create_Record' %}" class="btn btn-outline-primary">Create Record</a>
+
+</div>
+
+<hr style="border: 1px solid #090909; margin: 30px 180px;"><hr>
+
+<div class="text-center" style="padding-left: 70px;">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">frist_name</th>
+      <th scope="col">last_name</th>
+      <th scope="col">Category</th>
+      <th scope="col">phone</th>
+      <th scope="col">tall</th>
+      <th scope="col">wedight</th>
+      <th scope="col">address</th>
+      <th scope="col">Date</th>
+      <th scope="col">View</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in records %}
+    <tr>
+      <td>{{ record.id }}</td>
+      <td>{{record.frist_name}}</td>
+      <td>{{record.last_name}}</td>
+      <td>{{record.Category}}</td>
+      <td>{{record.phone}}</td>
+      <td>{{record.tall}}</td>
+      <td>{{record.wedight}}</td>
+      <td>{{record.address}}</td>
+      <td>{{record.create_at}}</td>
+      <td><a href="{% url 'view_record' record.id %}"class="btn btn-outline-primary btn-sm">View</a></td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% endblock %}
