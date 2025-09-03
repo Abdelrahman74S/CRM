@@ -1,7 +1,7 @@
-from django.shortcuts import render , redirect , get_object_or_404
+from django.shortcuts import render , redirect , get_object_or_404 
 from .form import *
 from .models import *
-from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth import authenticate , login , logout 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -69,6 +69,7 @@ def view_record(request, record_id):
     return render(request, 'web/view_record.html', context=context)
 
 
+@login_required(login_url='login')
 def update_record(request,record_id):
     record = get_object_or_404(Record, id=record_id)
     form = UpdateRecord(instance=record)
@@ -82,6 +83,11 @@ def update_record(request,record_id):
     
     return render (request,"web/Update_Record.html", context=context)
     
+@login_required(login_url='login')    
+def delete_record(request,record_id):
+    record = get_object_or_404(Record, id=record_id)
+    record.delete()
+    return redirect("dashboard")
 
 
 def LogoutUser(request):

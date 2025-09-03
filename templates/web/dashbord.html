@@ -28,6 +28,9 @@
     </tr>
   </thead>
   <tbody>
+    
+    {% if records %}
+      
     {% for record in records %}
     <tr>
       <td>{{ record.id }}</td>
@@ -43,6 +46,16 @@
 
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="110" class="text-center" >
+          <br>
+          <div class="alert alert-primary " style="border-radius: 20px ; margin: 10 250;" role="alert">
+          You don't have any record yet.
+          </div>
+      </td>
+    </tr>
+    {% endif %}
   </tbody>
 </table>
 </div>
