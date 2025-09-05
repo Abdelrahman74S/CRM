@@ -3,6 +3,9 @@ from .form import *
 from .models import *
 from django.contrib.auth import authenticate , login , logout 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+import logging 
+from django.contrib import messages
 # Create your views here.
 
 def index (request):
@@ -14,6 +17,7 @@ def register (request):
      form = CraeteUserForm(request.POST)
      if form.is_valid():
         form.save()
+        messages.success(request,'register success')
         return redirect("login")
     else:
      form = CraeteUserForm()
@@ -33,6 +37,7 @@ def LoginUser(request):
         user = authenticate(request ,username=username, password=password)
         if user is not None:
            login(request, user)
+           messages.success(request,'Login success')
            return redirect('index') 
     else:
         form = LoginForm()
@@ -52,6 +57,7 @@ def create_record(request):
         form = CreateRecord(request.POST) 
         if form.is_valid():
             form.save()
+            messages.success(request,'create success')
             return redirect("dashboard")
     
     else:
@@ -77,6 +83,7 @@ def update_record(request,record_id):
         form = UpdateRecord(request.POST,instance=record) 
         if form.is_valid():
             form.save()
+            messages.success(request,'update success')
             return redirect("dashboard")
             
     context ={'form' : form}
@@ -87,9 +94,33 @@ def update_record(request,record_id):
 def delete_record(request,record_id):
     record = get_object_or_404(Record, id=record_id)
     record.delete()
+    messages.success(request,'delete success')
     return redirect("dashboard")
+
+logger =logging.getLogger(__name__)
+
+@login_required(login_url='login')    
+def search_quary(request):
+    quary = request.GET.get('quary')
+    results =[]
+    try:
+        if quary:
+            results  = Record.objects.filter(
+                Q(frist_name__icontains=quary) |
+                Q(id__icontains=quary) |
+                Q(tall__icontains=quary)
+                )
+    except Exception as e:
+         logger.error("Erorr during search %s ",e )
+
+    return render(request, 'web/search.html', context={'results' : results , 'quary' : quary})
 
 
 def LogoutUser(request):
     logout(request)
+    messages.success(request,'logout success')
     return redirect('login')
+
+def Erorr_page(request,exception):
+    return render(request,'web/404.html',status=404)
+    
